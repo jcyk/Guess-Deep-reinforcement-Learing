@@ -16,6 +16,7 @@ class Q_network(Model):
         self.greedy_ratio = greedy_ratio
         self.target_frequency = target_frequency
         self.update_count = 0
+        self.vocab_size = data_loader.vocab_size
         with tf.variable_scope('online'):
             self.update_guesser_op,self.update_describler_op,self.guesser_value,self.describer_value,self.target_v,self.i_know,self.conv_d,self.conv_g,self.conv_len,self.last_d,self.target_w,self._guess_,self._description_= self.build_model()
            #update_guesser_op      #update_describler_op    #guesser_value      #describer_value      #target_v #i_know        #conversation_d #conversation_g#conversation_len#last_description#target_word#_guess_#_description_
@@ -57,7 +58,7 @@ class Q_network(Model):
             gue_ready = tf.matmul(gue_repr,gue_core)
             guesser_value = tf.reduce_sum(tf.mul(gue_ready,know),1)
             gue_pred = tf.matmul(gue_ready,word_embeddings,transpose_b=True)
-            _guess_ = tf.nn.top_k(gue_pred,self.data_loader.vocab_size)
+            _guess_ = tf.nn.top_k(gue_pred,self.vocab_size)
         
         with tf.variable_scope('describer'):
             target = tf.nn.embedding_lookup(word_embeddings,target_word)
@@ -68,7 +69,7 @@ class Q_network(Model):
             des_ready = tf.matmul(des_repr,des_core)
             describer_value = tf.reduce_sum(tf.mul(des_ready,know),1)
             des_pred = tf.matmul(des_ready,word_embeddings,transpose_b=True)
-            _description_ = tf.nn.top_k(des_pred,self.data_loader.vocab_size)
+            _description_ = tf.nn.top_k(des_pred,self.vocab_size)
 
         optimizer = tf.train.GradientDescentOptimizer(self.step_size)
         update_guesser_op = optimizer.minimize(tf.reduce_sum(tf.square(target_v-guesser_value)))
@@ -101,18 +102,21 @@ class Q_network(Model):
         if type(description) is not list:
             return value,idx,[set(conversation+[description])]
 
-        return value,idx,[ set(x+[y]) for x,y in zip(conversation,description)]
+        ban = [ set(x+[y]) if conversation<self.vocab_size-1 else set([]) for x,y in zip(conversation,description)]
+        return value,idx,ban
 
     def guesser_sample(self,conversation,description):
         if random.random()<self.greedy_ratio:
             value,word = self.guess(conversation,description)
             return word[0]
         ban = set(conversation+[description])
+        res = random.randint(0,self.vocab_size-1)
         while True:
-            res = random.randint(0,self.data_loader.vocab_size-1)
             if res not in ban:
                 return res
-
+            res+=1
+            if res == self.vocab_size:
+                res = 0
     
     def guess(self,conversation,description):
         value,idx,ban= self.f_guesser(conversation,description)
@@ -134,17 +138,21 @@ class Q_network(Model):
                                                self.target_w:self.to_tensor(target_word)})
         if type(target_word) is not list:
             return value,idx,[set(conversation+[target_word])]
-        return value,idx,[ set(x+[y]) for x,y in zip(conversation,target_word)]    
+        ban = [ set(x+[y]) if conversation<self.vocab_size-1 else set([]) for x,y in zip(conversation,target_word)]
+        return value,idx,ban  
 
     def describler_sample(self,conversation,target_word):
         if random.random()<self.greedy_ratio:
             value,word = self.describle(conversation,target_word)
             return word[0]
         ban = set(conversation+[target_word])
+        res = random.randint(0,self.vocab_size-1)
         while True:
-            res = random.randint(0,self.data_loader.vocab_size-1)
             if res not in ban:
                 return res
+            res+=1
+            if res == self.vocab_size:
+                res = 0
 
     def describle(self,conversation,target_word):
         value,idx,ban= self.f_describler(conversation,target_word)
