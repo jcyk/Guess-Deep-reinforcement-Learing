@@ -1,0 +1,6 @@
+
+*.pyc
+
+preprocess/CoreNLP/
+
+*.txt
