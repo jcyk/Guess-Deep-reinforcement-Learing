@@ -13,6 +13,10 @@ class Data_loader(object):
 				assert len(data) == embedding_size+1
 				self.vocab.append(data[0])
 				raw_data.append([float(d) for d in data[1:]])
+		self.vocab.append('IMG1')
+		self.vocab.append('IMG2')
+		raw_data.append(raw_data[0])
+		raw_data.append(raw_data[0])
 		self.vocab_size = len(self.vocab)
 		self.embeddings = np.asarray(raw_data,dtype=np.float32)
 		
