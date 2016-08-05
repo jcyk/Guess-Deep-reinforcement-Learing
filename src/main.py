@@ -22,7 +22,7 @@ flags.DEFINE_integer('hidden_units',128,'number of hidden units [128]')
 flags.DEFINE_integer('final_units',128,'number of final units [128]')
 flags.DEFINE_integer('minibatch_size',128,'minibatch size [128]')
 flags.DEFINE_integer('replay_size',20000,'replay size [20000]')
-flags.DEFINE_integer('budget',10000,'budget [10000]')
+flags.DEFINE_integer('budget',100000,'budget [100000]')
 FLAGS = flags.FLAGS
 
 def main(_):

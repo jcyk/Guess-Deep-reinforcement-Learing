@@ -17,6 +17,8 @@ class Replay(object):
 		self.count+=1
 		self.gue_pool.append((target_word,conversation,description,guess,_description))
 		if self.count > self.size and self.count%self.minibatch_size == 0:
+			self.gue_pool = self.gue_pool[:self.size]
+			self.des_pool = self.des_pool[:self.size]
 			self.update_count+=1
 			if self.update_count %2 ==0:
 				self.Q_network.update_guesser(random.sample(self.gue_pool,self.minibatch_size))
