@@ -212,7 +212,7 @@ class Q_network(Model):
                                                self.target_v:v
                                     })
         if self.update_count%2==0 and (self.update_count/2)%self.target_frequency==0:
-            self.update_target()
+            self.reset_target()
 
     def update_describler(self,minibatch):
         self.update_count+=1
