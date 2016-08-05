@@ -17,11 +17,11 @@ flags.DEFINE_string('embedding_file','../glove.6B','where is the embedding file 
 flags.DEFINE_integer('embedding_size',100,'embedding size [100]')
 flags.DEFINE_float('step_size',0.1,'step size [0.1]')
 flags.DEFINE_float('greedy_ratio',0.8,'greedy ratio [0.8]')
-flags.DEFINE_integer('target_frequency',5,'update target network every [5] steps')
+flags.DEFINE_integer('target_frequency',32,'update target network every [32] steps')
 flags.DEFINE_integer('hidden_units',128,'number of hidden units [128]')
 flags.DEFINE_integer('final_units',128,'number of final units [128]')
-flags.DEFINE_integer('minibatch_size',64,'minibatch size [64]')
-flags.DEFINE_integer('replay_size',2048,'replay size [2048]')
+flags.DEFINE_integer('minibatch_size',128,'minibatch size [128]')
+flags.DEFINE_integer('replay_size',20000,'replay size [20000]')
 flags.DEFINE_integer('budget',10000,'budget [10000]')
 FLAGS = flags.FLAGS
 
