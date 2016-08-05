@@ -119,10 +119,10 @@ class Q_network(Model):
                 res = 0
     
     def guess(self,conversation,description):
-        value,idx,ban= self.f_guesser(conversation,description)
-        res_v,res_w= [],[]
+        value,idx,ban = self.f_guesser(conversation,description)
+        res_v,res_w = [],[]
         for v,x,y in zip(list(value),list(idx),ban):
-            for i,j in zip(x,v):
+            for i,j in reversed(zip(x,v)):
                 if i not in y:
                     res_v.append(j)
                     res_w.append(i)
@@ -158,7 +158,7 @@ class Q_network(Model):
         value,idx,ban= self.f_describler(conversation,target_word)
         res_v,res_w = [],[]
         for v,x,y in zip(list(value),list(idx),ban):
-            for i,j in zip(x,v):
+            for i,j in reversed(zip(x,v)):
                 if i not in y:
                     res_v.append(j)
                     res_w.append(i)
@@ -209,7 +209,7 @@ class Q_network(Model):
                                                self.conv_len:self.to_tensor(conv_len),
                                                self.last_d:self.to_tensor(minibatch_d),
                                                self.i_know:self.to_tensor(minibatch_g),
-                                               self.target_v:v
+                                               self.target_v:v+1
                                     })
         if self.update_count%2==0 and (self.update_count/2)%self.target_frequency==0:
             self.reset_target()
@@ -244,7 +244,7 @@ class Q_network(Model):
                                                self.conv_len:self.to_tensor(conv_len),
                                                self.target_w:self.to_tensor(minibatch_t),
                                                self.i_know:self.to_tensor(minibatch_d),
-                                               self.target_v:v
+                                               self.target_v:v+1
                                     })
         if self.update_count%2==0 and (self.update_count/2)%self.target_frequency==0:
             self.reset_target()
