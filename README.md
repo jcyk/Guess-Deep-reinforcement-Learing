@@ -1,16 +1,15 @@
 # guess
-Deep Q Learning for the game of guessing word
+Deep Q Learning for the game of guessing words
 
 
-It implements the DQL algorithm as well as serveral recent advances in that filed, and applied to a game which is a popular talk game -- guess words.
+It implements the DQL algorithm as well as serveral recent advances in the field of deep reinforcement learning, applied to a game which is a popular langugae game -- guess words.
 
-The rules of this game is simple.
+The rules of the game is very simple:
 
-Two players. One word one game. 
-Suppose player1 get the target word. Then he/she can say any word (expcept for the target word itself) to describle the word he/she got.
-And the other is supposed to guess the word from his/her partner's description.
+1. Two players. One target word one game. 
+2. Suppose player1 is the describler, He/She can say any word (expcept for the target word itself) to describle the target word. Player2 is then supposed to guess the word from his/her partner's utterrance.
 
-Isn't it interetsing to teach computers to master that game?
+Isn't it interetsing to teach computers to master the game?
 
 However, I failed to acheive that, yet.
 
